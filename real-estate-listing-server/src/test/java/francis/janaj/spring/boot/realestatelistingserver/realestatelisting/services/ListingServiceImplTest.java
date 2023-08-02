@@ -1,10 +1,13 @@
 package francis.janaj.spring.boot.realestatelistingserver.realestatelisting.services;
 
 import francis.janaj.spring.boot.realestatelistingserver.domain.core.exceptions.ListingException;
+import francis.janaj.spring.boot.realestatelistingserver.domain.core.exceptions.UserException;
 import francis.janaj.spring.boot.realestatelistingserver.domain.realEstateListing.models.Listing;
 import francis.janaj.spring.boot.realestatelistingserver.domain.realEstateListing.models.User;
 import francis.janaj.spring.boot.realestatelistingserver.domain.realEstateListing.repos.ListingRepo;
+import francis.janaj.spring.boot.realestatelistingserver.domain.realEstateListing.repos.UserRepo;
 import francis.janaj.spring.boot.realestatelistingserver.domain.realEstateListing.services.ListingService;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -26,6 +29,8 @@ import java.util.Optional;
 public class ListingServiceImplTest {
     @MockBean
     private ListingRepo mockListingRepo;
+    @MockBean
+    private UserRepo mockUserRepo;
 
     @Autowired
     private ListingService listingService;
@@ -55,8 +60,23 @@ public class ListingServiceImplTest {
     }
 
     @Test
+    @DisplayName("Listing Service: Create Listing with User - Success")
+    public void createListingWithUserTestSuccess() throws UserException {
+        List<Listing> listings = new ArrayList<>();
+        Integer userId = 1;
+        User user = new User(userId, "Janaj", "Francis", "jfrancis@me.com","5678",listings);
+        BDDMockito.doReturn(Optional.of(user)).when(mockUserRepo).findById(userId);
+        BDDMockito.doReturn(mockResponseListing1).when(mockListingRepo).save(ArgumentMatchers.any());
+        Listing returnedListing = listingService.createListing(userId, inputListing);
+
+        Assertions.assertNotNull(returnedListing,"Listing should not be null");
+
+
+    }
+
+    @Test
     @DisplayName("Listing Service: Create Listing - Success")
-    public void createUserTestSuccess(){
+    public void createListingTestSuccess(){
         BDDMockito.doReturn(mockResponseListing1).when(mockListingRepo).save(ArgumentMatchers.any());
         Listing returnedListing = listingService.create(inputListing);
         Assertions.assertNotNull(returnedListing, "Listing should not be null");

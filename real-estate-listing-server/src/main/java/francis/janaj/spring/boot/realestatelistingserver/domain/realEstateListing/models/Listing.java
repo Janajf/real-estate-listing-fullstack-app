@@ -20,6 +20,7 @@ public class Listing {
     private String size;
     private String price;
     @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name= "user_id", nullable = false)
     private User user;
 
     public Listing(String location, String size, String price, User user) {

@@ -25,6 +25,7 @@ import java.util.List;
 
 import static org.hamcrest.core.Is.is;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -44,20 +45,25 @@ public class ListingControllerTest extends BaseControllerTest{
     private Listing inputListing;
     private Listing mockResponseListing1;
     private Listing mockResponseListing2;
+    private Listing mockResponseListing;
+    private User user1;
+    private User user2;
 
     @BeforeEach
     public void setUp(){
+        List<Listing> listings = new ArrayList<>();
         List<Listing> listings1 = new ArrayList<>();
         List<Listing> listings2 = new ArrayList<>();
 
-        User user1 = new User("Tariq", "Hook", "thook@me.com","1234",listings1);
+        user1 = new User("Tariq", "Hook", "thook@me.com","1234",listings1);
         user1.setId(1);
 
-        User user2 = new User("Janaj", "Francis", "jfrancis@me.com","5678",listings2);
+        user2 = new User("Janaj", "Francis", "jfrancis@me.com","5678",listings2);
         user2.setId(2);
 
         inputListing = new Listing("Wilmington, DE", "Med", "350000", user1);
 
+        mockResponseListing = new Listing("Wilmington, DE", "Med", "350000", user1);
         mockResponseListing1 = new Listing("Wilmington, DE", "Med", "350000", user1);
         mockResponseListing1.setId(1);
         mockResponseListing2 = new Listing("Dover, DE", "Large", "550000", user2);
@@ -66,7 +72,23 @@ public class ListingControllerTest extends BaseControllerTest{
     }
 
     @Test
-    @DisplayName("Listing Service: Create Listing - Success")
+    @DisplayName("POST: Create Listing with User - Success")
+    public void createListingSuccess() throws Exception{
+        BDDMockito.doReturn(mockResponseListing1).when(mockListingService).createListing(anyInt(),any());
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/listings/{id}",1)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .param("userId", "1")
+                        .content(asJsonString(inputListing)))
+
+                .andExpect(MockMvcResultMatchers.status().isCreated())
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id", Is.is(1)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.location", Is.is("Wilmington, DE")));
+
+    }
+    @Test
+    @DisplayName("POST: Create Listing - Success")
     public void createListingRequestSuccess() throws Exception{
         BDDMockito.doReturn(mockResponseListing1).when(mockListingService).create(any());
 

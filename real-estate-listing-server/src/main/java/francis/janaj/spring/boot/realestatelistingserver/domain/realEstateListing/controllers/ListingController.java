@@ -1,6 +1,7 @@
 package francis.janaj.spring.boot.realestatelistingserver.domain.realEstateListing.controllers;
 
 import francis.janaj.spring.boot.realestatelistingserver.domain.core.exceptions.ListingException;
+import francis.janaj.spring.boot.realestatelistingserver.domain.core.exceptions.UserException;
 import francis.janaj.spring.boot.realestatelistingserver.domain.realEstateListing.models.Listing;
 import francis.janaj.spring.boot.realestatelistingserver.domain.realEstateListing.services.ListingService;
 import org.slf4j.Logger;
@@ -23,6 +24,12 @@ public class ListingController {
     @Autowired
     public ListingController(ListingService listingService){
         this.listingService = listingService;
+    }
+
+    @PostMapping("/{id}")
+    public ResponseEntity<Listing> createListing(@RequestParam Integer userId, @RequestBody Listing listing) throws UserException{
+        Listing createdListing = listingService.createListing(userId, listing);
+        return new ResponseEntity<>(createdListing, HttpStatus.CREATED);
     }
 
     @PostMapping("")

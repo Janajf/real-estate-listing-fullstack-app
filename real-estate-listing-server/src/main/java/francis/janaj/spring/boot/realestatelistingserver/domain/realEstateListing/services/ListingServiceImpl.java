@@ -1,8 +1,11 @@
 package francis.janaj.spring.boot.realestatelistingserver.domain.realEstateListing.services;
 
 import francis.janaj.spring.boot.realestatelistingserver.domain.core.exceptions.ListingException;
+import francis.janaj.spring.boot.realestatelistingserver.domain.core.exceptions.UserException;
 import francis.janaj.spring.boot.realestatelistingserver.domain.realEstateListing.models.Listing;
+import francis.janaj.spring.boot.realestatelistingserver.domain.realEstateListing.models.User;
 import francis.janaj.spring.boot.realestatelistingserver.domain.realEstateListing.repos.ListingRepo;
+import francis.janaj.spring.boot.realestatelistingserver.domain.realEstateListing.repos.UserRepo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,15 +21,29 @@ public class ListingServiceImpl implements ListingService{
     private static Logger logger = LoggerFactory.getLogger(ListingService.class);
 
     private ListingRepo listingRepo;
+    private UserRepo userRepo;
 
     @Autowired
-    public ListingServiceImpl(ListingRepo listingRepo){
+    public ListingServiceImpl(ListingRepo listingRepo, UserRepo userRepo){
         this.listingRepo = listingRepo;
+        this.userRepo = userRepo;
     }
     @Override
     public Listing create(Listing listing) {
         Listing savedListing = listingRepo.save(listing);
         return savedListing;
+    }
+
+    @Override
+    public Listing createListing(Integer userId, Listing listing) throws UserException {
+        Optional<User> userOptional = userRepo.findById(userId);
+        if(userOptional.isEmpty()){
+            throw new UserException("User not found");
+        }
+        User user = userOptional.get();
+        listing.setUser(user);
+
+        return listingRepo.save(listing);
     }
 
     @Override
