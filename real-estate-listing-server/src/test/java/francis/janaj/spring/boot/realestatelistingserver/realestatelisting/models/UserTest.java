@@ -21,10 +21,10 @@ public class UserTest {
         emptyUser1 = new User();
         emptyUser2 = new User();
 
-        Listing listing1 = new Listing( "Wilmington, DE", "Large", "400000", user1);
+        Listing listing1 = new Listing( "Wilmington, DE", "Large", "400000", 1);
         listing1.setId(1);
 
-        Listing listing2 = new Listing( "Wilmington, DE", "Med", "350000",user2);
+        Listing listing2 = new Listing( "Wilmington, DE", "Med", "350000",2);
         listing2.setId(2);
         List<Listing> listings1 = new ArrayList<>();
         List<Listing> listings2 = new ArrayList<>();

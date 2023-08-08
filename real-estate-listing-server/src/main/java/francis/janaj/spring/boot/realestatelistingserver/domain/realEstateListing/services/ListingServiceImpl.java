@@ -21,29 +21,17 @@ public class ListingServiceImpl implements ListingService{
     private static Logger logger = LoggerFactory.getLogger(ListingService.class);
 
     private ListingRepo listingRepo;
-    private UserRepo userRepo;
+
 
     @Autowired
-    public ListingServiceImpl(ListingRepo listingRepo, UserRepo userRepo){
+    public ListingServiceImpl(ListingRepo listingRepo){
         this.listingRepo = listingRepo;
-        this.userRepo = userRepo;
+
     }
     @Override
     public Listing create(Listing listing) {
         Listing savedListing = listingRepo.save(listing);
         return savedListing;
-    }
-
-    @Override
-    public Listing createListing(Integer userId, Listing listing) throws UserException {
-        Optional<User> userOptional = userRepo.findById(userId);
-        if(userOptional.isEmpty()){
-            throw new UserException("User not found");
-        }
-        User user = userOptional.get();
-        listing.setUser(user);
-
-        return listingRepo.save(listing);
     }
 
     @Override
@@ -74,7 +62,7 @@ public class ListingServiceImpl implements ListingService{
         savedListing.setLocation(listing.getLocation());
         savedListing.setSize(listing.getSize());
         savedListing.setPrice(listing.getPrice());
-        savedListing.setUser(listing.getUser());
+        savedListing.setId(listing.getUserId());
         return listingRepo.save(savedListing);
     }
 

@@ -19,14 +19,13 @@ public class Listing {
     private String location;
     private String size;
     private String price;
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name= "user_id", nullable = false)
-    private User user;
+    @Column(name= "user_id")
+    private Integer userId;
 
-    public Listing(String location, String size, String price, User user) {
+    public Listing(String location, String size, String price, Integer userId) {
         this.location = location;
         this.size = size;
         this.price = price;
-        this.user = user;
+        this.userId = userId;
     }
 }

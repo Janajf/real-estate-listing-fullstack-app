@@ -25,10 +25,10 @@ public class ListingTest {
 
         User user = new User( "firstName", "lastName", "email@me.com", "password",listings);
 
-        listing1 = new Listing( "Location", "Large", "400000", user);
+        listing1 = new Listing( "Location", "Large", "400000", 1);
         listing1.setId(1);
 
-        listing2 = new Listing( "New Location", "Med", "350000",user);
+        listing2 = new Listing( "New Location", "Med", "350000",1);
         listing2.setId(2);
     }
 

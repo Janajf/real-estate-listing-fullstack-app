@@ -23,6 +23,7 @@ public class User {
     private String email;
     private String password;
     @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
     private List<Listing> listings;
 
     public User(String firstname, String lastname, String email, String password, List<Listing> listings) {
@@ -59,3 +60,4 @@ public class User {
     }
 
 }
+
